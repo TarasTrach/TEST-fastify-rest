@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: fastify_db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: fastify_user
+      POSTGRES_PASSWORD: fastify_pass
+      POSTGRES_DB: fastify_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastify_api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: "postgresql://fastify_user:fastify_pass@db:5432/fastify_db"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+      - /uploads:/app/uploads
+    working_dir: /usr/src/app
+    command: npm run start
+
+volumes:
+  postgres-data:

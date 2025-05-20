@@ -1,0 +1,21 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "NodeNext",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "outDir": "dist",
+    "sourceMap": true,
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/types/**/*.d.ts"
+  ]
+}

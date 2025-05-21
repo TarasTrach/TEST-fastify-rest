@@ -2,6 +2,10 @@
 
 This project was bootstrapped with Fastify-CLI.
 
+### `npm install`
+
+Don't forget :)
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -15,4 +19,6 @@ Open [http://localhost:3001](http://localhost:3000) to view it in the browser.
 
 For production mode(with Docker fully)  
 Open [http://localhost:3001](http://localhost:3000) to view it in the browser.
+
+
 

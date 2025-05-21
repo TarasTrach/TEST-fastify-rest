@@ -8,7 +8,7 @@ export default fp(async (app) => {
             const ok = await accountService.verify({
                 prisma: app.prisma,
                 email,
-                password
+                password,
             });
             if (!ok) {
                 reply.code(401).send({ message: 'Invalid credentials' });
@@ -17,11 +17,27 @@ export default fp(async (app) => {
         authenticate: true,
     });
 
-    app.addHook('preValidation', async (req) => {
-        if (req.headers.authorization?.startsWith('Basic ')) {
-            const [, encoded] = req.headers.authorization.split(' ');
-            const [id, email] = Buffer.from(encoded, 'base64').toString().split(':');
-            req.user = { id: Number(id), email };
+    app.addHook('preValidation', async (req, reply) => {
+        const auth = req.headers.authorization;
+        if (!auth?.startsWith('Basic ')) {
+            return;
+        }
+
+        const [, encoded] = auth.split(' ');
+        const [email, password] = Buffer
+            .from(encoded, 'base64')
+            .toString()
+            .split(':');
+
+        try {
+            const user = await accountService.getUser({
+                prisma: app.prisma,
+                email,
+                password,
+            });
+
+            req.user = { id: user.id, email: user.email };
+        } catch (err) {
         }
     });
 });

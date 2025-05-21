@@ -20,3 +20,17 @@ export const verify = async ({ prisma, email, password }: AuthParams) => {
     if (!user) return false;
     return argon2.verify(user.passwordHash, password);
 };
+
+export const getUser = async ({ prisma, email, password }: AuthParams) => {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error('User not found');
+
+    const passwordHash = await argon2.hash(password, { type: argon2.argon2id });
+    const verifiedUser = argon2.verify(user.passwordHash, passwordHash);
+    if (!verifiedUser) throw new Error('Invalid credentials');
+
+    return {
+        id: user.id,
+        email: user.email,
+    };
+};

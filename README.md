@@ -2,9 +2,11 @@
 
 This project was bootstrapped with Fastify-CLI.
 
+Don't forget :)
+
 ### `npm install`
 
-Don't forget :)
+### `npm run prisma:migrate`
 
 ## Available Scripts
 
